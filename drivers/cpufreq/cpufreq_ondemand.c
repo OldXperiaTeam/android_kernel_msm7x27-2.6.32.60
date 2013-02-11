@@ -515,6 +515,17 @@ static struct attribute_group dbs_attr_group_old = {
 
 /************************** sysfs end ************************/
 
+static void dbs_freq_increase(struct cpufreq_policy *p, unsigned int freq)
+{
+	if (dbs_tuners_ins.powersave_bias)
+		freq = powersave_bias_target(p, freq, CPUFREQ_RELATION_H);
+	else if (p->cur == p->max)
+	    return;
+
+	__cpufreq_driver_target(p, freq, dbs_tuners_ins.powersave_bias ?
+	CPUFREQ_RELATION_L : CPUFREQ_RELATION_H);
+}
+
 static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 {
 	unsigned int max_load_freq;
@@ -618,6 +629,7 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 		/* if we are already at full speed then break out early */
 		if (!dbs_tuners_ins.powersave_bias) {
 			if (policy->cur == policy->max)
+		dbs_freq_increase(policy, policy->max);
 				return;
 
 			__cpufreq_driver_target(policy, policy->max,
