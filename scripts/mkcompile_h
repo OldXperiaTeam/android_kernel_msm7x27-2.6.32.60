@@ -37,11 +37,7 @@ else
 	VERSION=$KBUILD_BUILD_VERSION
 fi
 
-if [ -z "$KBUILD_BUILD_TIMESTAMP" ]; then
-	TIMESTAMP=`date`
-else
-	TIMESTAMP=$KBUILD_BUILD_TIMESTAMP
-fi
+TIMESTAMP=`date`
 
 UTS_VERSION="#$VERSION"
 CONFIG_FLAGS=""
@@ -63,15 +59,9 @@ UTS_TRUNCATE="cut -b -$UTS_LEN"
 
   echo \#define UTS_VERSION \"`echo $UTS_VERSION | $UTS_TRUNCATE`\"
 
-  if [ -z "$KBUILD_BUILD_TIMESTAMP" ]; then
-	echo \#define LINUX_COMPILE_TIME \"`date +%T`\"
-	echo \#define LINUX_COMPILE_BY \"`whoami`\"
-	echo \#define LINUX_COMPILE_HOST \"`hostname | $UTS_TRUNCATE`\"
-  else
-	echo \#define LINUX_COMPILE_TIME \"`date --date="$TIMESTAMP" +%R:%S`\"
-	echo \#define LINUX_COMPILE_BY \"BuildUser\"
-	echo \#define LINUX_COMPILE_HOST \"BuildHost\"
-  fi
+echo \#define LINUX_COMPILE_TIME \"`date --date="$TIMESTAMP" +%R:%S`\"
+echo \#define LINUX_COMPILE_BY \"OldXperiaTeam\"
+echo \#define LINUX_COMPILE_HOST \"ubuntu\"
 
   if [ -x /bin/dnsdomainname ]; then
     domain=`dnsdomainname 2> /dev/null`
